@@ -9,16 +9,12 @@ pnpm-debug.log*
 *.log
 
 # -------------------------
-# Nuxt (Frontend)
+# Backend (Node/Express)
 # -------------------------
-.nuxt/
-.output/
-dist/
-build/
-
-# Nitro output
-.server/
-.nitro/
+backend/node_modules/
+backend/*.env
+backend/.env
+backend/.env.*
 
 # Local env files
 .env
@@ -31,12 +27,12 @@ pnpm-lock.yaml
 yarn.lock
 
 # -------------------------
-# Backend (Node/Express)
+# Security - SSH Keys
 # -------------------------
-backend/node_modules/
-backend/*.env
-backend/.env
-backend/.env.*
+ssh_key
+ssh_key.*
+*.pem
+*.key
 
 # -------------------------
 # IDE / Editor
