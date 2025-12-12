@@ -1,150 +1,151 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import blockchainService from '@/services/blockchain'
-import api from '@/services/api'
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import * as walletService from "@/services/wallet.service";
+import * as blockchainService from "@/services/blockchain.service";
+import { useAuthStore } from "./auth";
 
-export const useWalletStore = defineStore('wallet', () => {
-  // State
-  const address = ref(null)
-  const isConnected = ref(false)
-  const tokenBalance = ref('0')
-  const loading = ref(false)
-  const error = ref(null)
-  const chainId = ref(null)
+export const useWalletStore = defineStore("wallet", () => {
+  const connected = ref(false);
+  const address = ref(null);
+  const balance = ref(0);
+  const loading = ref(false);
+  const error = ref(null);
 
-  // Getters
-  const shortAddress = computed(() => {
-    if (!address.value) return ''
-    return `${address.value.slice(0, 6)}...${address.value.slice(-4)}`
-  })
+  const isConnected = computed(() => connected.value && !!address.value);
 
-  // Actions
-  async function connectWallet() {
-    loading.value = true
-    error.value = null
-    
+  // Check wallet status from backend
+  async function checkStatus() {
     try {
-      // Request accounts from MetaMask
-      const accounts = await blockchainService.requestAccounts()
-      
-      if (accounts.length === 0) {
-        throw new Error('No accounts found')
+      const data = await walletService.getWalletStatus();
+      connected.value = data.walletConnected;
+      address.value = data.walletAddress;
+
+      if (connected.value && address.value) {
+        await fetchBalance();
       }
 
-      address.value = accounts[0]
-      isConnected.value = true
-
-      // Get network info
-      const network = await blockchainService.getNetwork()
-      chainId.value = network.chainId.toString()
-
-      // Fetch token balance
-      await fetchTokenBalance()
-
-      // Setup listeners
-      setupListeners()
-
-      return address.value
+      return data;
     } catch (err) {
-      error.value = err.message || 'Failed to connect wallet'
-      isConnected.value = false
-      throw err
-    } finally {
-      loading.value = false
+      error.value = err;
+      throw err;
     }
   }
 
-  async function fetchTokenBalance() {
-    if (!address.value) return
-    
+  // Connect wallet with MetaMask
+  async function connect() {
     try {
-      const balance = await blockchainService.getTokenBalance(address.value)
-      tokenBalance.value = balance
-      return balance
-    } catch (err) {
-      console.error('Error fetching token balance:', err)
-      error.value = 'Failed to fetch token balance'
-    }
-  }
+      loading.value = true;
+      error.value = null;
 
-  async function verifyWalletSignature() {
-    if (!address.value) {
-      throw new Error('Wallet not connected')
-    }
+      // Check if MetaMask is installed
+      if (!blockchainService.isMetaMaskInstalled()) {
+        throw new Error(
+          "MetaMask is not installed. Please install MetaMask to continue."
+        );
+      }
 
-    loading.value = true
-    error.value = null
+      // Request account access
+      const accounts = await blockchainService.requestAccounts();
+      const walletAddress = accounts[0];
 
-    try {
-      // Get nonce from backend (Authenticated POST)
-      const nonceResponse = await api.getNonce()
-      const nonce = nonceResponse.nonce
+      // Get nonce from backend
+      const { nonce } = await walletService.generateNonce(walletAddress);
 
-      // Sign message with MetaMask
-      const message = `Sign this message to verify your wallet ownership. Nonce: ${nonce}`
-      const signature = await window.ethereum.request({
-        method: 'personal_sign',
-        params: [message, address.value],
-      })
+      // Sign nonce with MetaMask
+      const message = `Sign this message to verify your wallet ownership. Nonce: ${nonce}`;
+      const signature = await blockchainService.signMessage(message);
 
       // Verify signature with backend
-      const verifyResponse = await api.verifySignature({
-        address: address.value, 
-        signature,
-      })
+      const data = await walletService.verifyWallet(walletAddress, signature);
 
-      return verifyResponse
+      connected.value = true;
+      address.value = walletAddress;
+
+      // Update auth store user data
+      const authStore = useAuthStore();
+      authStore.updateUser(data.user);
+
+      // Fetch balance
+      await fetchBalance();
+
+      return data;
     } catch (err) {
-      error.value = err.response?.data?.message || 'Failed to verify signature'
-      throw err
+      error.value = err;
+      throw err;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
+  // Disconnect wallet
+  async function disconnect() {
+    try {
+      loading.value = true;
+      error.value = null;
+
+      const data = await walletService.disconnectWallet();
+
+      connected.value = false;
+      address.value = null;
+      balance.value = 0;
+
+      // Update auth store
+      const authStore = useAuthStore();
+      authStore.updateUser(data.user);
+
+      return data;
+    } catch (err) {
+      error.value = err;
+      throw err;
+    } finally {
+      loading.value = false;
+    }
+  }
+
+  // Fetch token balance
+  async function fetchBalance() {
+    if (!address.value) return;
+
+    try {
+      const data = await blockchainService.getTokenBalance(address.value);
+      balance.value = data.balance || 0;
+      return data;
+    } catch (err) {
+      console.error("Error fetching balance:", err);
+      // Don't throw, just log
+    }
+  }
+
+  // Setup MetaMask listeners
   function setupListeners() {
-    // Listen for account changes
-    blockchainService.onAccountsChanged((accounts) => {
+    blockchainService.onAccountsChanged(async (accounts) => {
       if (accounts.length === 0) {
-        disconnectWallet()
-      } else {
-        address.value = accounts[0]
-        fetchTokenBalance()
+        // User disconnected wallet in MetaMask
+        await disconnect();
+      } else if (accounts[0] !== address.value) {
+        // User switched accounts
+        address.value = accounts[0];
+        await fetchBalance();
       }
-    })
+    });
 
-    // Listen for chain changes
     blockchainService.onChainChanged(() => {
-      window.location.reload()
-    })
-  }
-
-  function disconnectWallet() {
-    address.value = null
-    isConnected.value = false
-    tokenBalance.value = '0'
-    chainId.value = null
-  }
-
-  function clearError() {
-    error.value = null
+      // Reload page on chain change
+      window.location.reload();
+    });
   }
 
   return {
-    // State
+    connected,
     address,
-    isConnected,
-    tokenBalance,
+    balance,
     loading,
     error,
-    chainId,
-    // Getters
-    shortAddress,
-    // Actions
-    connectWallet,
-    fetchTokenBalance,
-    verifyWalletSignature,
-    disconnectWallet,
-    clearError,
-  }
-})
+    isConnected,
+    checkStatus,
+    connect,
+    disconnect,
+    fetchBalance,
+    setupListeners,
+  };
+});

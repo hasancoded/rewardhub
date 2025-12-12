@@ -1,113 +1,134 @@
-import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-import api from '@/services/api'
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import * as authService from "@/services/auth.service";
+import { STORAGE_KEYS } from "@/utils/constants";
 
-export const useAuthStore = defineStore('auth', () => {
-  // State
-  const token = ref(localStorage.getItem('token') || null)
-  const user = ref(null)
-  const loading = ref(false)
-  const error = ref(null)
+export const useAuthStore = defineStore("auth", () => {
+  const user = ref(null);
+  const token = ref(null);
+  const loading = ref(false);
+  const error = ref(null);
 
-  // Getters
-  const isAuthenticated = computed(() => !!token.value)
-  const userRole = computed(() => user.value?.role || null)
-  const isAdmin = computed(() => user.value?.role === 'admin')
-  const isFaculty = computed(() => user.value?.role === 'faculty')
-  const isStudent = computed(() => user.value?.role === 'student')
+  // Computed
+  const isAuthenticated = computed(() => !!token.value);
+  const userRole = computed(() => user.value?.role || null);
+  const isAdmin = computed(() => userRole.value === "admin");
+  const isFaculty = computed(() => userRole.value === "faculty");
+  const isStudent = computed(() => userRole.value === "student");
 
-  // Actions
+  // Initialize from localStorage
+  function init() {
+    const storedToken = localStorage.getItem(STORAGE_KEYS.TOKEN);
+    const storedUser = localStorage.getItem(STORAGE_KEYS.USER);
+
+    if (storedToken && storedUser) {
+      token.value = storedToken;
+      user.value = JSON.parse(storedUser);
+    }
+  }
+
+  // Login
   async function login(credentials) {
-    loading.value = true
-    error.value = null
-    
     try {
-      const response = await api.login(credentials)
-      token.value = response.token
-      user.value = response.user
-      
-      // Persist token
-      localStorage.setItem('token', response.token)
-      
-      return response
+      loading.value = true;
+      error.value = null;
+
+      const data = await authService.login(credentials);
+
+      token.value = data.token;
+      user.value = data.user;
+
+      // Store in localStorage
+      localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(data.user));
+      localStorage.setItem(STORAGE_KEYS.USER_ROLE, data.user.role);
+
+      return data;
     } catch (err) {
-      error.value = err.response?.data?.message || 'Login failed'
-      throw err
+      error.value = err;
+      throw err;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
+  // Register
   async function register(userData) {
-    loading.value = true
-    error.value = null
-    
     try {
-      const response = await api.register(userData)
-      token.value = response.token
-      user.value = response.user
-      
-      // Persist token
-      localStorage.setItem('token', response.token)
-      
-      return response
-    } catch (err) {
-      error.value = err.response?.data?.message || 'Registration failed'
-      throw err
-    } finally {
-      loading.value = false
-    }
-  }
+      loading.value = true;
+      error.value = null;
 
-  async function fetchProfile() {
-    if (!token.value) return
-    
-    loading.value = true
-    error.value = null
-    
-    try {
-      const response = await api.getProfile()
-      user.value = response.user
-      return response
-    } catch (err) {
-      error.value = err.response?.data?.message || 'Failed to fetch profile'
-      // If token is invalid, logout
-      if (err.response?.status === 401) {
-        logout()
+      const data = await authService.register(userData);
+
+      if (data.token) {
+        token.value = data.token;
+        user.value = data.user;
+
+        localStorage.setItem(STORAGE_KEYS.TOKEN, data.token);
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(data.user));
+        localStorage.setItem(STORAGE_KEYS.USER_ROLE, data.user.role);
       }
-      throw err
+
+      return data;
+    } catch (err) {
+      error.value = err;
+      throw err;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
   }
 
-  function logout() {
-    token.value = null
-    user.value = null
-    localStorage.removeItem('token')
+  // Fetch profile
+  async function fetchProfile() {
+    try {
+      loading.value = true;
+      error.value = null;
+
+      const data = await authService.getProfile();
+      user.value = data.user;
+
+      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(data.user));
+
+      return data;
+    } catch (err) {
+      error.value = err;
+      throw err;
+    } finally {
+      loading.value = false;
+    }
   }
 
-  function clearError() {
-    error.value = null
+  // Logout
+  function logout() {
+    user.value = null;
+    token.value = null;
+
+    localStorage.removeItem(STORAGE_KEYS.TOKEN);
+    localStorage.removeItem(STORAGE_KEYS.USER);
+    localStorage.removeItem(STORAGE_KEYS.USER_ROLE);
+  }
+
+  // Update user data (e.g., after wallet connection)
+  function updateUser(userData) {
+    user.value = { ...user.value, ...userData };
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user.value));
   }
 
   return {
-    // State
-    token,
     user,
+    token,
     loading,
     error,
-    // Getters
     isAuthenticated,
     userRole,
     isAdmin,
     isFaculty,
     isStudent,
-    // Actions
+    init,
     login,
     register,
     fetchProfile,
     logout,
-    clearError,
-  }
-})
+    updateUser,
+  };
+});

@@ -1,11 +1,29 @@
 <template>
-  <router-view />
+  <div id="app">
+    <router-view />
+    <ToastNotification ref="toastRef" />
+  </div>
 </template>
 
 <script setup>
-// Root component - router-view will render the appropriate layout/view
+import { ref, onMounted } from "vue";
+import { useAuthStore } from "@/stores/auth";
+import ToastNotification from "@/components/common/ToastNotification.vue";
+
+const authStore = useAuthStore();
+const toastRef = ref(null);
+
+onMounted(() => {
+  // Initialize auth from localStorage
+  authStore.init();
+
+  // Make toast globally available
+  if (toastRef.value) {
+    window.$toast = toastRef.value.addToast;
+  }
+});
 </script>
 
 <style>
-/* Global styles are imported in main.js */
+@import "@/assets/styles/main.css";
 </style>

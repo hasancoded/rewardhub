@@ -1,17 +1,37 @@
 <template>
-  <div class="flex items-center justify-center">
-    <div class="relative">
-      <div class="w-12 h-12 border-4 border-primary-200 border-t-primary-600 rounded-full animate-spin"></div>
-      <p v-if="text" class="mt-4 text-sm text-gray-600 text-center">{{ text }}</p>
-    </div>
+  <div class="loading-spinner" :class="{ 'spinner-sm': size === 'sm' }">
+    <div class="spinner"></div>
+    <p v-if="message" class="loading-message">{{ message }}</p>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  text: {
+  size: {
     type: String,
-    default: '',
+    default: "md",
+    validator: (value) => ["sm", "md"].includes(value),
   },
-})
+  message: {
+    type: String,
+    default: "",
+  },
+});
 </script>
+
+<style scoped>
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.loading-message {
+  color: var(--text-secondary);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+</style>

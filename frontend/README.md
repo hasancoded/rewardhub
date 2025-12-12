@@ -1,255 +1,360 @@
 # RewardHub Frontend
 
-A modern Vue 3 + Vite frontend for the RewardHub blockchain-based student reward system.
+Complete Vue 3 + Vite frontend for the RewardHub blockchain-based student reward system.
 
-## Tech Stack
+## 🎯 Overview
 
-- **Framework:** Vue 3 (Composition API)
-- **Build Tool:** Vite
-- **State Management:** Pinia
-- **Routing:** Vue Router
-- **Styling:** Tailwind CSS
-- **HTTP Client:** Axios
-- **Blockchain:** Ethers.js (MetaMask integration)
+RewardHub is a comprehensive student reward platform that integrates with Ethereum blockchain for token-based rewards. This frontend implements all backend API endpoints and provides role-based interfaces for admins, faculty, and students.
 
-## Features
+## 📋 Features
 
 ### Authentication
-- JWT-based authentication
-- Login and registration
-- Token persistence in localStorage
-- Auto-redirect on authentication state changes
 
-### Role-Based Dashboards
-- **Student Dashboard:** View achievements, token balance, and available perks
-- **Admin Dashboard:** System statistics, user management, achievement/perk management
-- **Faculty Dashboard:** Award achievements to students
+- User login and registration
+- JWT token-based authentication
+- Role-based access control (Admin, Faculty, Student)
+- Automatic token refresh and session management
+
+### Admin Dashboard
+
+- System statistics overview
+- User management (CRUD operations)
+- Achievement management with blockchain sync
+- Perk management with blockchain sync
+- Real-time activity monitoring
+
+### Faculty Dashboard
+
+- Award achievements to students
+- View student list
+- Track awarded achievements
+
+### Student Dashboard
+
+- View personal achievements
+- Browse and redeem perks
+- Connect MetaMask wallet
+- View token balance
+- Track redemption history
 
 ### Blockchain Integration
+
 - MetaMask wallet connection
-- View token balance from smart contract
-- Blockchain verification status for achievements
 - Signature-based wallet verification
+- Token balance display
+- Transaction tracking
+- On-chain status monitoring
 
-### Core Functionality
-- **Students:**
-  - View earned achievements
-  - Check token balance
-  - Redeem perks with tokens
-  - View redemption history
+## 🛠️ Tech Stack
 
-- **Faculty:**
-  - Award achievements to students
-  - View available achievements
-  - Track recent awards
+- **Vue 3** - Progressive JavaScript framework (Composition API)
+- **Vite** - Next-generation frontend build tool
+- **Vue Router** - Official router for Vue.js
+- **Pinia** - State management library
+- **Axios** - HTTP client for API requests
+- **Ethers.js** - Ethereum blockchain interaction
+- **CSS** - Vanilla CSS with design system
 
-- **Admin:**
-  - Create and manage users
-  - CRUD operations for achievements
-  - CRUD operations for perks
-  - View system statistics
-
-## Project Structure
+## 📁 Project Structure
 
 ```
 frontend/
-├── public/                 # Static assets
+├── public/
 ├── src/
 │   ├── assets/
-│   │   └── styles/        # Global styles
+│   │   └── styles/
+│   │       └── main.css          # Global styles and design system
 │   ├── components/
-│   │   ├── common/        # Reusable components
-│   │   ├── layout/        # Layout components
-│   │   └── wallet/        # Wallet-related components
-│   ├── composables/       # Vue composables
-│   ├── layouts/           # Page layouts
-│   ├── router/            # Vue Router configuration
-│   ├── services/          # API and blockchain services
-│   ├── stores/            # Pinia stores
-│   ├── views/             # Page components
-│   │   ├── auth/          # Authentication pages
-│   │   ├── dashboard/     # Dashboard pages
-│   │   ├── student/       # Student-specific pages
-│   │   ├── admin/         # Admin-specific pages
-│   │   └── faculty/       # Faculty-specific pages
-│   ├── App.vue            # Root component
-│   └── main.js            # Application entry point
-├── index.html             # HTML entry point
-├── package.json           # Dependencies
-├── vite.config.js         # Vite configuration
-├── tailwind.config.js     # Tailwind configuration
-└── postcss.config.js      # PostCSS configuration
+│   │   └── common/               # Reusable components
+│   │       ├── AppHeader.vue
+│   │       ├── AppSidebar.vue
+│   │       ├── BaseModal.vue
+│   │       ├── LoadingSpinner.vue
+│   │       └── ToastNotification.vue
+│   ├── views/
+│   │   ├── auth/                 # Authentication views
+│   │   │   ├── LoginView.vue
+│   │   │   └── RegisterView.vue
+│   │   ├── admin/                # Admin views
+│   │   │   ├── DashboardView.vue
+│   │   │   ├── ManageUsersView.vue
+│   │   │   ├── ManageAchievementsView.vue
+│   │   │   └── ManagePerksView.vue
+│   │   ├── faculty/              # Faculty views
+│   │   │   ├── DashboardView.vue
+│   │   │   └── AwardAchievementsView.vue
+│   │   └── student/              # Student views
+│   │       ├── DashboardView.vue
+│   │       ├── MyAchievementsView.vue
+│   │       ├── PerksView.vue
+│   │       └── WalletView.vue
+│   ├── stores/                   # Pinia stores
+│   │   ├── auth.js
+│   │   ├── wallet.js
+│   │   ├── users.js
+│   │   ├── achievements.js
+│   │   └── perks.js
+│   ├── services/                 # API services
+│   │   ├── api.js
+│   │   ├── auth.service.js
+│   │   ├── wallet.service.js
+│   │   ├── admin.service.js
+│   │   ├── achievement.service.js
+│   │   ├── perk.service.js
+│   │   ├── studentAchievement.service.js
+│   │   ├── redemption.service.js
+│   │   └── blockchain.service.js
+│   ├── router/
+│   │   └── index.js              # Vue Router configuration
+│   ├── utils/
+│   │   ├── constants.js          # App constants
+│   │   └── helpers.js            # Utility functions
+│   ├── App.vue                   # Root component
+│   └── main.js                   # Application entry point
+├── .env.example                  # Environment variables template
+├── index.html                    # HTML entry point
+├── package.json                  # Dependencies
+├── vite.config.js                # Vite configuration
+└── README.md                     # This file
 ```
 
-## Setup Instructions
+## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js (v16 or higher)
 - npm or yarn
-- Backend API running on `http://localhost:5000`
-- MetaMask browser extension (for blockchain features)
+- MetaMask browser extension
+- Backend server running on `http://localhost:5000`
 
 ### Installation
 
-1. Navigate to the frontend directory:
-```bash
-cd frontend
-```
+1. **Clone the repository and navigate to frontend directory:**
 
-2. Install dependencies:
-```bash
-npm install
-```
+   ```bash
+   cd frontend
+   ```
 
-3. Create environment file:
-```bash
-cp .env.example .env
-```
+2. **Install dependencies:**
 
-4. Update `.env` with your configuration:
-```env
-VITE_API_URL=http://localhost:5000
-VITE_CONTRACT_ADDRESS=your_deployed_contract_address
-VITE_CHAIN_ID=1337
-```
+   ```bash
+   npm install
+   ```
 
-5. Copy the contract ABI:
-The blockchain service expects the ABI at `../backend/abi/RewardHub.json`. Ensure your backend has the deployed contract ABI in this location.
+3. **Create environment file:**
 
-### Development
+   ```bash
+   cp env.example .env
+   ```
 
-Start the development server:
-```bash
-npm run dev
-```
+4. **Configure environment variables in `.env`:**
 
-The application will be available at `http://localhost:3000`
+   ```env
+   VITE_API_BASE_URL=http://localhost:5000/api
+   VITE_BLOCKCHAIN_NETWORK=localhost
+   VITE_CONTRACT_ADDRESS=your_deployed_contract_address
+   ```
 
-### Production Build
+5. **Start development server:**
 
-Build for production:
+   ```bash
+   npm run dev
+   ```
+
+6. **Open browser:**
+   Navigate to `http://localhost:3000`
+
+### Build for Production
+
 ```bash
 npm run build
 ```
 
-Preview production build:
+The built files will be in the `dist/` directory.
+
+### Preview Production Build
+
 ```bash
 npm run preview
 ```
 
-## Environment Variables
+## 📡 API Endpoints Coverage
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `VITE_API_URL` | Backend API URL | `http://localhost:5000` |
-| `VITE_CONTRACT_ADDRESS` | Deployed smart contract address | - |
-| `VITE_CHAIN_ID` | Blockchain network chain ID | `1337` |
+This frontend implements **all 37 backend API endpoints**:
 
-## Usage
+### Authentication (3 endpoints)
 
-### Login Credentials
+- POST /api/auth/register
+- POST /api/auth/login
+- GET /api/auth/profile
 
-Use the credentials created via the backend API or register a new student account.
+### Wallet Management (4 endpoints)
 
-**Default roles:**
-- `admin` - Full system access
-- `faculty` - Can award achievements
-- `student` - Can view achievements and redeem perks
+- POST /api/users/wallet/nonce
+- POST /api/users/wallet/verify
+- POST /api/users/wallet/disconnect
+- GET /api/users/wallet/status
 
-### Wallet Connection
+### Admin Routes (6 endpoints)
 
-1. Install MetaMask browser extension
-2. Click "Connect Wallet" in the navbar
-3. Approve the connection request
-4. Your wallet address and token balance will be displayed
+- POST /api/admin/users
+- GET /api/admin/users
+- PUT /api/admin/users/:id
+- DELETE /api/admin/users/:id
+- GET /api/admin/dashboard-stats
+- GET /api/admin/students
 
-### Student Workflow
+### Achievement Management (7 endpoints)
 
-1. Login with student credentials
-2. View dashboard to see achievements and token balance
-3. Navigate to "My Achievements" to see earned achievements
-4. Navigate to "Redeem Perks" to spend tokens
-5. Select a perk and click "Redeem Now"
+- POST /api/admin/achievements
+- GET /api/admin/achievements
+- GET /api/admin/achievements/:id
+- PUT /api/admin/achievements/:id
+- DELETE /api/admin/achievements/:id
+- GET /api/achievements
+- POST /api/achievements
 
-### Faculty Workflow
+### Perk Management (7 endpoints)
 
-1. Login with faculty credentials
-2. Navigate to "Award Achievements"
-3. Select a student from the list
-4. Choose an achievement
-5. Optionally enable blockchain sync (requires student wallet)
-6. Click "Award Achievement"
+- POST /api/admin/perks
+- GET /api/admin/perks
+- GET /api/admin/perks/:id
+- PUT /api/admin/perks/:id
+- DELETE /api/admin/perks/:id
+- GET /api/rewards
+- POST /api/rewards
 
-### Admin Workflow
+### Student Achievements (5 endpoints)
 
-1. Login with admin credentials
-2. Access admin dashboard for system overview
-3. Manage users via "Manage Users"
-4. Create/edit achievements via "Manage Achievements"
-5. Create/edit perks via "Manage Perks"
+- POST /api/student-achievements
+- GET /api/student-achievements
+- GET /api/student-achievements/:id
+- GET /api/student-achievements/student/:studentId
+- DELETE /api/student-achievements/:id
 
-## API Integration
+### Redemptions (3 endpoints)
 
-The frontend communicates with the backend API through the `api.js` service. All requests automatically include the JWT token from localStorage.
+- POST /api/redemptions
+- GET /api/redemptions/student/:studentId
+- GET /api/redemptions
 
-**Key endpoints:**
-- `/auth/login` - User authentication
-- `/auth/register` - Student registration
-- `/achievements` - Achievement CRUD
-- `/perks` - Perk CRUD
-- `/users` - User management (admin only)
-- `/wallet/connect` - Wallet connection
+### Blockchain (2 endpoints)
 
-## State Management
+- GET /api/blockchain/balance/:wallet
+- POST /api/students/register
 
-Pinia stores manage application state:
+## 🔐 User Roles & Access
 
-- **authStore** - Authentication state and user data
-- **userStore** - User management
-- **walletStore** - Wallet connection and token balance
-- **achievementStore** - Achievements data
-- **rewardStore** - Perks and redemptions
+### Admin
 
-## Routing
+- Full system access
+- User management
+- Achievement and perk CRUD
+- System statistics
+- Routes: `/admin/*`
 
-Protected routes require authentication. Role-based guards ensure users can only access authorized pages.
+### Faculty
 
-**Route structure:**
-- `/auth/login` - Login page
-- `/auth/register` - Registration page
-- `/dashboard` - Student dashboard
-- `/dashboard/admin` - Admin dashboard
-- `/dashboard/faculty` - Faculty dashboard
-- `/dashboard/*` - Role-specific pages
+- Award achievements to students
+- View student list
+- Routes: `/faculty/*`
 
-## Styling
+### Student
 
-The application uses Tailwind CSS for styling with a custom color palette. The design is:
-- Clean and minimal
-- Fully responsive
-- Professional MVP aesthetic
-- Consistent across all pages
+- View personal achievements
+- Connect wallet
+- Redeem perks
+- View token balance
+- Routes: `/student/*`
 
-## Troubleshooting
+## 🎨 Design System
 
-### MetaMask Connection Issues
-- Ensure MetaMask is installed and unlocked
-- Check that you're on the correct network (chain ID matches)
-- Try refreshing the page
+The application uses a custom CSS design system with:
 
-### API Connection Issues
-- Verify backend is running on the configured URL
-- Check browser console for CORS errors
-- Ensure JWT token is valid
+- CSS variables for theming
+- Consistent color palette
+- Reusable utility classes
+- Responsive design
+- Clean, professional aesthetics
 
-### Build Issues
-- Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
-- Clear Vite cache: `rm -rf node_modules/.vite`
+## 🔧 Development
 
-## License
+### Code Style
 
-ISC
+- Vue 3 Composition API with `<script setup>`
+- Modular component architecture
+- Centralized state management with Pinia
+- Service layer for API calls
+- Utility functions for common operations
 
-## Support
+### State Management
 
-For issues or questions, please refer to the backend API documentation or contact the development team.
+- **auth store**: User authentication and session
+- **wallet store**: MetaMask integration and balance
+- **users store**: User management (admin)
+- **achievements store**: Achievement CRUD
+- **perks store**: Perk CRUD
+
+### Routing
+
+- Role-based navigation guards
+- Auto-redirect after login
+- Protected routes
+- 404 and unauthorized pages
+
+## 🔌 MetaMask Integration
+
+The wallet integration follows this flow:
+
+1. User clicks "Connect Wallet"
+2. MetaMask prompts for account access
+3. Frontend requests nonce from backend
+4. User signs nonce with MetaMask
+5. Frontend sends signature to backend for verification
+6. Backend validates and updates user record
+7. Frontend displays connected wallet and balance
+
+## 📱 Responsive Design
+
+The application is fully responsive and works on:
+
+- Desktop (1200px+)
+- Tablet (768px - 1199px)
+- Mobile (< 768px)
+
+## 🐛 Error Handling
+
+- Global error interceptor for API calls
+- Toast notifications for user feedback
+- Form validation
+- Loading states
+- Empty states
+- 401 auto-logout and redirect
+
+## 🔒 Security
+
+- JWT token stored in localStorage
+- Automatic token injection via Axios interceptors
+- Role-based route protection
+- Signature-based wallet verification
+- CORS-enabled API calls
+
+## 📝 License
+
+This project is part of the RewardHub system.
+
+## 🤝 Contributing
+
+1. Follow Vue 3 Composition API best practices
+2. Use the existing design system
+3. Maintain consistent code style
+4. Test all API integrations
+5. Ensure responsive design
+
+## 📞 Support
+
+For issues or questions, please contact the development team.
+
+---
+
+**Built with ❤️ using Vue 3 + Vite**
