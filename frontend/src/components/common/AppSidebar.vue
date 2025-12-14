@@ -64,8 +64,8 @@ const navLinks = computed(() => {
 
 <style scoped>
 .sidebar {
-  width: 250px;
-  background: white;
+  width: 260px;
+  background: var(--bg-elevated);
   border-right: 1px solid var(--border-color);
   height: calc(100vh - 65px);
   position: sticky;
@@ -74,32 +74,41 @@ const navLinks = computed(() => {
 }
 
 .sidebar-nav {
-  padding: 1rem 0;
+  padding: 1.5rem 0;
   display: flex;
   flex-direction: column;
+  gap: 0.25rem;
 }
 
 .sidebar-link {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 0.875rem 1.5rem;
+  gap: 0.875rem;
+  padding: 0.75rem 1.25rem;
+  margin: 0 0.75rem;
   color: var(--text-secondary);
   text-decoration: none;
-  transition: all var(--transition-fast);
-  border-left: 3px solid transparent;
+  transition: all var(--transition-base);
+  border-radius: var(--border-radius);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-sm);
 }
 
 .sidebar-link:hover {
   background-color: var(--gray-50);
   color: var(--text-primary);
+  transform: translateX(2px);
 }
 
 .sidebar-link.active {
-  background-color: rgba(37, 99, 235, 0.05);
+  background: linear-gradient(
+    135deg,
+    var(--primary-subtle) 0%,
+    rgba(6, 182, 212, 0.05) 100%
+  );
   color: var(--primary-color);
-  border-left-color: var(--primary-color);
-  font-weight: 500;
+  font-weight: var(--font-weight-semibold);
+  box-shadow: inset 3px 0 0 var(--primary-color);
 }
 
 .link-icon {
@@ -107,6 +116,8 @@ const navLinks = computed(() => {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  width: 20px;
+  height: 20px;
 }
 
 .link-text {
@@ -115,7 +126,7 @@ const navLinks = computed(() => {
 
 @media (max-width: 768px) {
   .sidebar {
-    width: 60px;
+    width: 70px;
   }
 
   .link-text {
@@ -125,6 +136,7 @@ const navLinks = computed(() => {
   .sidebar-link {
     justify-content: center;
     padding: 0.875rem;
+    margin: 0 0.5rem;
   }
 }
 </style>

@@ -37,12 +37,13 @@ function handleLogout() {
 
 <style scoped>
 .app-header {
-  background: white;
+  background: var(--bg-elevated);
   border-bottom: 1px solid var(--border-color);
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: 100;
+  backdrop-filter: blur(8px);
 }
 
 .header-container {
@@ -61,9 +62,17 @@ function handleLogout() {
 
 .brand-title {
   font-size: var(--font-size-xl);
-  font-weight: 700;
-  color: var(--primary-color);
+  font-weight: var(--font-weight-bold);
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--accent-teal) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin: 0;
+  letter-spacing: -0.02em;
 }
 
 .header-nav {
@@ -76,10 +85,14 @@ function handleLogout() {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  padding: 0.5rem 1rem;
+  background: var(--gray-50);
+  border-radius: var(--border-radius);
+  border: 1px solid var(--border-color);
 }
 
 .user-name {
-  font-weight: 500;
+  font-weight: var(--font-weight-medium);
   color: var(--text-primary);
   font-size: var(--font-size-sm);
 }
@@ -91,6 +104,10 @@ function handleLogout() {
 
   .user-name {
     display: none;
+  }
+
+  .user-info {
+    padding: 0.5rem;
   }
 }
 </style>

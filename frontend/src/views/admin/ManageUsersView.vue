@@ -330,16 +330,42 @@ onMounted(() => {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.page-header h1 {
+  background: linear-gradient(
+    135deg,
+    var(--primary-color) 0%,
+    var(--accent-teal) 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .filters {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
 }
 
 .action-buttons {
   display: flex;
   gap: 0.5rem;
+}
+
+.alert {
+  padding: 1rem;
+  border-radius: var(--border-radius);
+  margin-bottom: 1rem;
+  border: 1px solid;
+}
+
+.alert-info {
+  background: var(--info-subtle);
+  border-color: var(--info-color);
+  color: var(--info-dark);
 }
 </style>
