@@ -51,9 +51,9 @@ exports.redeemReward = async (req, res) => {
     // Only call blockchain if perk is synced on-chain
     if (reward.onChainCreated) {
       try {
-        txHash = await blockchain.redeemPerk(reward.title);
+        txHash = await blockchain.redeemPerk(walletAddress, reward.title);
         console.log(
-          `✅ Perk "${reward.title}" redeemed on blockchain: ${txHash}`
+          `✅ Perk "${reward.title}" redeemed on blockchain for ${walletAddress}: ${txHash}`
         );
       } catch (blockchainErr) {
         console.error("Blockchain redemption failed:", blockchainErr);
@@ -79,7 +79,7 @@ exports.redeemReward = async (req, res) => {
     // Populate the reward details for response
     const populatedRedemption = await Redemption.findById(
       redemption._id
-    ).populate("reward", "title description tokenCost");
+    ).populate("rewardId", "title description tokenCost");
 
     res.status(201).json({
       msg: "Perk redeemed successfully!",
@@ -96,11 +96,30 @@ exports.redeemReward = async (req, res) => {
 // Get student's redemptions
 exports.getRedemptionsByStudent = async (req, res) => {
   try {
+    const { studentId } = req.params;
+
+    // Validate ObjectId format
+    if (!studentId || studentId === "undefined" || studentId === "null") {
+      return res.status(400).json({
+        error: "Student ID is required",
+      });
+    }
+
+    if (!require("mongoose").Types.ObjectId.isValid(studentId)) {
+      return res.status(400).json({
+        error: "Invalid student ID format",
+      });
+    }
+
     const redemptions = await Redemption.find({
-      studentId: req.params.studentId,
+      studentId: studentId,
     })
       .populate("rewardId", "title description tokenCost")
       .sort({ date: -1 });
+
+    console.log(
+      `Found ${redemptions.length} redemptions for student ${studentId}`
+    );
     res.json({ redemptions }); // Return as object with redemptions property
   } catch (err) {
     console.error("Error fetching redemptions:", err);

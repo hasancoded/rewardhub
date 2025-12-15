@@ -78,6 +78,7 @@ import {
   redeemPerk as redeemPerkService,
   getStudentRedemptions,
 } from "@/services/redemption.service";
+import { parseApiError } from "@/utils/errorParser";
 
 const walletStore = useWalletStore();
 const authStore = useAuthStore();
@@ -92,7 +93,7 @@ async function loadPerks() {
     const data = await getRewards();
     perks.value = data.rewards;
   } catch (error) {
-    window.$toast?.("Error loading perks: " + error.message, "error");
+    window.$toast?.(parseApiError(error), "error");
   } finally {
     loading.value = false;
   }
@@ -105,25 +106,37 @@ async function redeemPerk(rewardId) {
   }
 
   try {
-    await redeemPerkService(rewardId);
+    await redeemPerkService(rewardId, walletStore.address);
     window.$toast?.("Perk redeemed successfully!", "success");
-    await walletStore.fetchBalance();
+    await walletStore.fetchBalance(); // Refresh balance to show updated tokens
     await loadRedemptions(); // Refresh redemption history
   } catch (error) {
-    window.$toast?.("Error redeeming perk: " + error.message, "error");
+    // Error message is already user-friendly from the service
+    window.$toast?.(parseApiError(error), "error");
   }
 }
 
 async function loadRedemptions() {
   loadingRedemptions.value = true;
   try {
-    const userId = authStore.user?._id;
-    if (userId) {
-      const data = await getStudentRedemptions(userId);
-      redemptions.value = data.redemptions || [];
+    const userId = authStore.user?.id; // Fixed: Changed from _id to id
+    console.log("Loading redemptions for user:", userId); // Debug log
+
+    if (!userId) {
+      console.error("User ID not found in auth store");
+      window.$toast?.(
+        "Unable to load redemptions. Please log in again.",
+        "error"
+      );
+      return;
     }
+
+    const data = await getStudentRedemptions(userId);
+    console.log("Redemptions loaded:", data.redemptions?.length || 0); // Debug log
+    redemptions.value = data.redemptions || [];
   } catch (error) {
-    window.$toast?.("Error loading redemptions: " + error.message, "error");
+    console.error("Error loading redemptions:", error);
+    window.$toast?.(parseApiError(error), "error");
   } finally {
     loadingRedemptions.value = false;
   }

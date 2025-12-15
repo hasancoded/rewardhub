@@ -126,16 +126,17 @@ contract RewardHubToken is ERC20, Ownable {
         emit AchievementGranted(student, title, reward);
     }
 
-    function redeemPerk(string calldata title) external {
-        require(isStudent[msg.sender], "Not a student");
+    function redeemPerk(address student, string calldata title) external onlyOwner {
+        require(isStudent[student], "Not a student");
         require(perks[title].isAvailable, "Perk not available");
 
         uint256 cost = perks[title].cost;
-        require(balanceOf(msg.sender) >= cost, "Not enough tokens");
+        uint256 costWithDecimals = cost * 1e18;
+        require(balanceOf(student) >= costWithDecimals, "Not enough tokens");
 
-        _burn(msg.sender, cost);
+        _burn(student, costWithDecimals);
 
-        emit PerkRedeemed(msg.sender, title, cost);
+        emit PerkRedeemed(student, title, cost);
     }
 
     function getAchievements(address student) external view returns (string[] memory) {

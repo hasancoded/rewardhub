@@ -697,6 +697,11 @@
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "student",
+        "type": "address"
+      },
+      {
         "internalType": "string",
         "name": "title",
         "type": "string"

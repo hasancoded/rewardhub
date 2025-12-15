@@ -9,6 +9,7 @@ export const useWalletStore = defineStore("wallet", () => {
   const address = ref(null);
   const balance = ref(0);
   const loading = ref(false);
+  const refreshing = ref(false);
   const error = ref(null);
 
   const isConnected = computed(() => connected.value && !!address.value);
@@ -105,18 +106,32 @@ export const useWalletStore = defineStore("wallet", () => {
   }
 
   // Fetch token balance
-  async function fetchBalance() {
+  async function fetchBalance(isManualRefresh = false) {
     if (!address.value) return;
 
     try {
+      if (isManualRefresh) {
+        refreshing.value = true;
+      }
+
       const data = await blockchainService.getTokenBalance(address.value);
       // Backend returns { raw, human } - use human for display
       balance.value = data.human || 0;
       return data;
     } catch (err) {
       console.error("Error fetching balance:", err);
-      // Silent fail - balance fetch is non-critical
+
+      // For manual refresh, throw error to show user feedback
+      if (isManualRefresh) {
+        throw err;
+      }
+
+      // Silent fail for automatic fetches - balance fetch is non-critical
       balance.value = 0;
+    } finally {
+      if (isManualRefresh) {
+        refreshing.value = false;
+      }
     }
   }
 
@@ -144,6 +159,7 @@ export const useWalletStore = defineStore("wallet", () => {
     address,
     balance,
     loading,
+    refreshing,
     error,
     isConnected,
     checkStatus,

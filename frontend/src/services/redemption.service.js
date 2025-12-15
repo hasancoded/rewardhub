@@ -1,4 +1,5 @@
 import api from "./api";
+import { handleApiError, ErrorContext } from "@/utils/errorHandler";
 
 /**
  * Redemption Service
@@ -6,19 +7,37 @@ import api from "./api";
  */
 
 // POST /api/redemptions
-export const redeemPerk = async (rewardId) => {
-  const response = await api.post("/redemptions", { rewardId });
-  return response.data;
+export const redeemPerk = async (rewardId, walletAddress) => {
+  try {
+    const response = await api.post("/redemptions", {
+      rewardId,
+      walletAddress,
+    });
+    return response.data;
+  } catch (error) {
+    const userMessage = handleApiError(error, ErrorContext.REDEMPTION);
+    throw new Error(userMessage);
+  }
 };
 
 // GET /api/redemptions/student/:studentId
 export const getStudentRedemptions = async (studentId) => {
-  const response = await api.get(`/redemptions/student/${studentId}`);
-  return response.data;
+  try {
+    const response = await api.get(`/redemptions/student/${studentId}`);
+    return response.data;
+  } catch (error) {
+    const userMessage = handleApiError(error, ErrorContext.GENERAL);
+    throw new Error(userMessage);
+  }
 };
 
 // GET /api/redemptions
 export const getAllRedemptions = async () => {
-  const response = await api.get("/redemptions");
-  return response.data;
+  try {
+    const response = await api.get("/redemptions");
+    return response.data;
+  } catch (error) {
+    const userMessage = handleApiError(error, ErrorContext.GENERAL);
+    throw new Error(userMessage);
+  }
 };

@@ -51,6 +51,7 @@ import AppHeader from "@/components/common/AppHeader.vue";
 import AppSidebar from "@/components/common/AppSidebar.vue";
 import { useWalletStore } from "@/stores/wallet";
 import { truncateAddress } from "@/utils/helpers";
+import { parseApiError } from "@/utils/errorParser";
 
 const walletStore = useWalletStore();
 const loading = ref(false);
@@ -61,7 +62,7 @@ async function handleConnect() {
     await walletStore.connect();
     window.$toast?.("Wallet connected successfully!", "success");
   } catch (error) {
-    window.$toast?.("Error connecting wallet: " + error.message, "error");
+    window.$toast?.(parseApiError(error), "error");
   } finally {
     loading.value = false;
   }
@@ -72,7 +73,7 @@ async function handleDisconnect() {
     await walletStore.disconnect();
     window.$toast?.("Wallet disconnected successfully!", "success");
   } catch (error) {
-    window.$toast?.("Error disconnecting wallet: " + error.message, "error");
+    window.$toast?.(parseApiError(error), "error");
   }
 }
 </script>

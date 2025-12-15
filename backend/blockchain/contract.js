@@ -366,16 +366,16 @@ const grantAchievement = async (studentAddress, achievementTitle) => {
 
 /**
  * Redeem a perk (burns tokens)
- * Note: Contract uses msg.sender to identify the student, so we only pass the perk title
+ * Note: Admin wallet redeems on behalf of the student
  */
-const redeemPerk = async (perkTitle) => {
+const redeemPerk = async (studentAddress, perkTitle) => {
   try {
-    console.log(`Redeeming perk "${perkTitle}"`);
+    console.log(`Redeeming perk "${perkTitle}" for student ${studentAddress}`);
 
     const txHash = await sendTransactionWithRetry(
       contract.redeemPerk,
-      [perkTitle],
-      `redeemPerk("${perkTitle}")`
+      [studentAddress, perkTitle],
+      `redeemPerk("${studentAddress}", "${perkTitle}")`
     );
 
     return txHash;

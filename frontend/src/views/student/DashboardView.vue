@@ -9,9 +9,24 @@
           <p class="text-secondary">Welcome back!</p>
         </div>
 
+        <!-- Student Details Section -->
+        <StudentDetails />
+
         <div class="stats-grid">
           <div class="stat-card card">
-            <h3>Token Balance</h3>
+            <div class="stat-header">
+              <h3>Token Balance</h3>
+              <button
+                @click="handleRefreshBalance"
+                :disabled="!walletStore.isConnected || walletStore.refreshing"
+                class="btn-refresh"
+                :class="{ spinning: walletStore.refreshing }"
+                aria-label="Refresh token balance"
+                title="Refresh balance"
+              >
+                <RefreshIcon />
+              </button>
+            </div>
             <p class="stat-value">{{ walletStore.balance || 0 }}</p>
             <p class="text-secondary">Reward tokens</p>
           </div>
@@ -35,10 +50,13 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onUnmounted } from "vue";
 import AppHeader from "@/components/common/AppHeader.vue";
 import AppSidebar from "@/components/common/AppSidebar.vue";
+import StudentDetails from "@/components/student/StudentDetails.vue";
+import RefreshIcon from "@/components/icons/RefreshIcon.vue";
 import { useWalletStore } from "@/stores/wallet";
+import { getErrorMessage } from "@/utils/errorHandler";
 
 const walletStore = useWalletStore();
 
@@ -53,13 +71,50 @@ async function connectWallet() {
   }
 }
 
-onMounted(async () => {
-  await walletStore.checkStatus();
-  // Fetch balance if wallet is already connected
+async function handleRefreshBalance() {
+  if (!walletStore.isConnected) {
+    window.$toast?.("Please connect your wallet first", "warning");
+    return;
+  }
+
+  try {
+    await walletStore.fetchBalance(true); // true = manual refresh
+    window.$toast?.("Balance refreshed successfully!", "success");
+  } catch (error) {
+    const errorMessage = getErrorMessage(error);
+    window.$toast?.(
+      errorMessage || "Failed to refresh balance. Please try again.",
+      "error"
+    );
+  }
+}
+
+async function refreshBalance() {
   if (walletStore.isConnected && walletStore.address) {
     await walletStore.fetchBalance();
   }
+}
+
+// Handle page visibility changes to refresh balance when user returns to tab
+function handleVisibilityChange() {
+  if (!document.hidden) {
+    refreshBalance();
+  }
+}
+
+onMounted(async () => {
+  await walletStore.checkStatus();
+  // Fetch balance if wallet is already connected
+  await refreshBalance();
   walletStore.setupListeners();
+
+  // Add visibility change listener
+  document.addEventListener("visibilitychange", handleVisibilityChange);
+});
+
+onUnmounted(() => {
+  // Clean up listener
+  document.removeEventListener("visibilitychange", handleVisibilityChange);
 });
 </script>
 
@@ -91,12 +146,57 @@ onMounted(async () => {
   gap: 1.5rem;
 }
 
+.stat-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
 .stat-card h3 {
   font-size: var(--font-size-sm);
   font-weight: 600;
   color: var(--text-secondary);
   text-transform: uppercase;
-  margin-bottom: 0.75rem;
+  margin: 0;
+}
+
+.btn-refresh {
+  background: transparent;
+  border: none;
+  padding: 0.375rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+  border-radius: var(--border-radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  color: var(--primary-color);
+  background: var(--bg-tertiary);
+  transform: scale(1.05);
+}
+
+.btn-refresh:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-refresh.spinning {
+  animation: spin 1s linear infinite;
+  color: var(--primary-color);
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .stat-value {
