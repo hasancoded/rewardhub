@@ -2,7 +2,7 @@
   <header class="app-header">
     <div class="header-container">
       <div class="header-brand">
-        <h1 class="brand-title">RewardHub</h1>
+        <Logo variant="full" size="md" />
       </div>
 
       <nav class="header-nav">
@@ -23,6 +23,7 @@
 import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
+import Logo from "@/components/common/Logo.vue";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -47,9 +48,8 @@ function handleLogout() {
 }
 
 .header-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 1rem 1.5rem;
+  width: 100%;
+  padding: 1rem 1.5rem 1rem 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,21 +58,9 @@ function handleLogout() {
 .header-brand {
   display: flex;
   align-items: center;
-}
-
-.brand-title {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  background: linear-gradient(
-    135deg,
-    var(--primary-color) 0%,
-    var(--accent-teal) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin: 0;
-  letter-spacing: -0.02em;
+  width: 260px;
+  padding-left: 1.5rem;
+  flex-shrink: 0;
 }
 
 .header-nav {
@@ -99,7 +87,13 @@ function handleLogout() {
 
 @media (max-width: 768px) {
   .header-container {
-    padding: 1rem;
+    padding: 1rem 1rem 1rem 0;
+  }
+
+  .header-brand {
+    width: 70px;
+    padding-left: 0.5rem;
+    justify-content: center;
   }
 
   .user-name {

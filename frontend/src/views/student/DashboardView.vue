@@ -15,7 +15,7 @@
         <div class="stats-grid">
           <div class="stat-card card">
             <div class="stat-header">
-              <h3>Token Balance</h3>
+              <h3>Available Balance</h3>
               <button
                 @click="handleRefreshBalance"
                 :disabled="!walletStore.isConnected || walletStore.refreshing"
@@ -29,6 +29,16 @@
             </div>
             <p class="stat-value">{{ walletStore.balance || 0 }}</p>
             <p class="text-secondary">Reward tokens</p>
+            <div
+              v-if="walletStore.databaseRedemptions > 0"
+              class="balance-breakdown"
+            >
+              <small class="breakdown-text">
+                Blockchain: {{ walletStore.blockchainBalance }} tokens<br />
+                Database redemptions: -{{ walletStore.databaseRedemptions }}
+                tokens
+              </small>
+            </div>
           </div>
 
           <div class="stat-card card">
@@ -204,5 +214,17 @@ onUnmounted(() => {
   font-weight: 700;
   color: var(--primary-color);
   margin-bottom: 0.5rem;
+}
+
+.balance-breakdown {
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--border-color);
+}
+
+.breakdown-text {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  line-height: 1.6;
 }
 </style>

@@ -76,6 +76,18 @@ const routes = [
     component: AwardAchievements,
     meta: { requiresAuth: true, role: USER_ROLES.FACULTY },
   },
+  {
+    path: "/faculty/achievements",
+    name: "FacultyManageAchievements",
+    component: ManageAchievements,
+    meta: { requiresAuth: true, role: USER_ROLES.FACULTY },
+  },
+  {
+    path: "/faculty/perks",
+    name: "FacultyManagePerks",
+    component: ManagePerks,
+    meta: { requiresAuth: true, role: USER_ROLES.FACULTY },
+  },
   // Student routes
   {
     path: "/student/dashboard",

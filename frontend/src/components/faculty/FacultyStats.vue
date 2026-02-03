@@ -58,7 +58,7 @@
           </svg>
         </div>
         <div class="stat-content">
-          <h3 class="stat-label">This Week</h3>
+          <h3 class="stat-label">Achievements This Week</h3>
           <p class="stat-value">{{ stats.thisWeek }}</p>
           <p
             v-if="stats.trends.weekComparison !== undefined"

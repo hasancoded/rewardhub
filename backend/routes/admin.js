@@ -17,7 +17,11 @@ router.use(verifyToken);
 // @route   GET /api/admin/students
 // @desc    List all students (for faculty to award achievements)
 // @access  Faculty, Admin
-router.get("/students", requireRole("faculty", "admin"), adminUserController.listStudents);
+router.get(
+  "/students",
+  requireRole("faculty", "admin"),
+  adminUserController.listStudents
+);
 
 // ======================
 // Admin-Only Routes
@@ -41,7 +45,11 @@ router.put("/users/:id", requireRole("admin"), adminUserController.updateUser);
 // @route   DELETE /api/admin/users/:id
 // @desc    Delete user
 // @access  Admin
-router.delete("/users/:id", requireRole("admin"), adminUserController.deleteUser);
+router.delete(
+  "/users/:id",
+  requireRole("admin"),
+  adminUserController.deleteUser
+);
 
 // ======================
 // Dashboard Statistics
@@ -50,7 +58,11 @@ router.delete("/users/:id", requireRole("admin"), adminUserController.deleteUser
 // @route   GET /api/admin/dashboard-stats
 // @desc    Get comprehensive dashboard statistics
 // @access  Admin
-router.get("/dashboard-stats", requireRole("admin"), adminController.getDashboardStats);
+router.get(
+  "/dashboard-stats",
+  requireRole("admin"),
+  adminController.getDashboardStats
+);
 
 // ======================
 // Achievement Management
@@ -58,28 +70,48 @@ router.get("/dashboard-stats", requireRole("admin"), adminController.getDashboar
 
 // @route   POST /api/admin/achievements
 // @desc    Create a new achievement
-// @access  Admin
-router.post("/achievements", requireRole("admin"), adminAchievementController.createAchievement);
+// @access  Faculty, Admin
+router.post(
+  "/achievements",
+  requireRole("faculty", "admin"),
+  adminAchievementController.createAchievement
+);
 
 // @route   GET /api/admin/achievements
 // @desc    List all achievements
-// @access  Admin
-router.get("/achievements", requireRole("admin"), adminAchievementController.listAchievements);
+// @access  Faculty, Admin
+router.get(
+  "/achievements",
+  requireRole("faculty", "admin"),
+  adminAchievementController.listAchievements
+);
 
 // @route   GET /api/admin/achievements/:id
 // @desc    Get single achievement
-// @access  Admin
-router.get("/achievements/:id", requireRole("admin"), adminAchievementController.getAchievement);
+// @access  Faculty, Admin
+router.get(
+  "/achievements/:id",
+  requireRole("faculty", "admin"),
+  adminAchievementController.getAchievement
+);
 
 // @route   PUT /api/admin/achievements/:id
 // @desc    Update achievement
-// @access  Admin
-router.put("/achievements/:id", requireRole("admin"), adminAchievementController.updateAchievement);
+// @access  Faculty, Admin
+router.put(
+  "/achievements/:id",
+  requireRole("faculty", "admin"),
+  adminAchievementController.updateAchievement
+);
 
 // @route   DELETE /api/admin/achievements/:id
 // @desc    Delete achievement
-// @access  Admin
-router.delete("/achievements/:id", requireRole("admin"), adminAchievementController.deleteAchievement);
+// @access  Faculty, Admin
+router.delete(
+  "/achievements/:id",
+  requireRole("faculty", "admin"),
+  adminAchievementController.deleteAchievement
+);
 
 // ======================
 // Perk Management
@@ -87,27 +119,47 @@ router.delete("/achievements/:id", requireRole("admin"), adminAchievementControl
 
 // @route   POST /api/admin/perks
 // @desc    Create a new perk
-// @access  Admin
-router.post("/perks", requireRole("admin"), adminPerkController.createPerk);
+// @access  Faculty, Admin
+router.post(
+  "/perks",
+  requireRole("faculty", "admin"),
+  adminPerkController.createPerk
+);
 
 // @route   GET /api/admin/perks
 // @desc    List all perks
-// @access  Admin
-router.get("/perks", requireRole("admin"), adminPerkController.listPerks);
+// @access  Faculty, Admin
+router.get(
+  "/perks",
+  requireRole("faculty", "admin"),
+  adminPerkController.listPerks
+);
 
 // @route   GET /api/admin/perks/:id
 // @desc    Get single perk
-// @access  Admin
-router.get("/perks/:id", requireRole("admin"), adminPerkController.getPerk);
+// @access  Faculty, Admin
+router.get(
+  "/perks/:id",
+  requireRole("faculty", "admin"),
+  adminPerkController.getPerk
+);
 
 // @route   PUT /api/admin/perks/:id
 // @desc    Update perk
-// @access  Admin
-router.put("/perks/:id", requireRole("admin"), adminPerkController.updatePerk);
+// @access  Faculty, Admin
+router.put(
+  "/perks/:id",
+  requireRole("faculty", "admin"),
+  adminPerkController.updatePerk
+);
 
 // @route   DELETE /api/admin/perks/:id
 // @desc    Delete perk
-// @access  Admin
-router.delete("/perks/:id", requireRole("admin"), adminPerkController.deletePerk);
+// @access  Faculty, Admin
+router.delete(
+  "/perks/:id",
+  requireRole("faculty", "admin"),
+  adminPerkController.deletePerk
+);
 
 module.exports = router;

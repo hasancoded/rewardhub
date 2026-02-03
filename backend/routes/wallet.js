@@ -21,6 +21,11 @@ router.post("/verify", walletController.verifyWallet);
 // @access  Protected
 router.post("/disconnect", walletController.disconnectWallet);
 
+// @route   GET /api/users/wallet/calculated-balance
+// @desc    Get calculated token balance (blockchain + database redemptions)
+// @access  Protected
+router.get("/calculated-balance", walletController.getCalculatedBalance);
+
 // @route   GET /api/users/wallet/status
 // @desc    Get wallet connection status
 // @access  Protected

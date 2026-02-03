@@ -53,12 +53,25 @@ exports.getDashboardStats = async (req, res) => {
       return sum + (redemption.rewardId?.tokenCost || 0);
     }, 0);
 
+    // Calculate total tokens awarded from database (StudentAchievement records)
+    const studentAchievements = await StudentAchievement.find().populate(
+      "achievementId",
+      "tokenReward"
+    );
+
+    const totalTokensAwardedFromDatabase = studentAchievements.reduce(
+      (sum, sa) => {
+        return sum + (sa.achievementId?.tokenReward || 0);
+      },
+      0
+    );
+
     // ======================
     // Blockchain Statistics
     // ======================
 
     let totalTokensAvailableInBlockchain = 0;
-    let totalTokensDistributedToStudents = 0;
+    let totalTokensFromBlockchain = 0;
     let topHolders = [];
 
     try {
@@ -99,8 +112,8 @@ exports.getDashboardStats = async (req, res) => {
 
       const allBalances = await Promise.all(balancePromises);
 
-      // Calculate total distributed (sum of all student balances)
-      totalTokensDistributedToStudents = allBalances.reduce((sum, holder) => {
+      // Calculate total from blockchain (sum of all student balances)
+      totalTokensFromBlockchain = allBalances.reduce((sum, holder) => {
         return sum + holder.balance;
       }, 0);
 
@@ -131,9 +144,11 @@ exports.getDashboardStats = async (req, res) => {
       totalRewardsCreated: totalPerks, // Alias for consistency
       studentsWithNoWallet,
 
-      // Blockchain stats
-      totalTokensAvailableInBlockchain,
-      totalTokensDistributedToStudents,
+      // Token statistics (comprehensive)
+      totalTokensDistributed: totalTokensAwardedFromDatabase, // Primary display: all awarded tokens
+      totalTokensAwardedFromDatabase, // All tokens from StudentAchievement records
+      totalTokensFromBlockchain, // Sum of student wallet balances
+      totalTokensAvailableInBlockchain, // Total supply from contract
       topHolders,
 
       // Metadata

@@ -52,43 +52,43 @@ A blockchain-integrated student reward management system that enables educationa
 
 ```
 RewardHub/
-├── backend/                     # Node.js/Express backend
-│   ├── blockchain/              # Blockchain integration layer
-│   │   ├── contract.js          # Smart contract interaction functions
+├── backend/                           # Node.js/Express backend
+│   ├── blockchain/                    # Blockchain integration layer
+│   │   ├── contract.js                # Smart contract interaction functions
 │   │   └── RewardHubTokenABI.json
-│   ├── config/                  # Configuration files
-│   │   └── db.js                # MongoDB connection
-│   ├── contracts/               # Solidity smart contracts
+│   ├── config/                        # Configuration files
+│   │   └── db.js                      # MongoDB connection
+│   ├── contracts/                     # Solidity smart contracts
 │   │   └── RewardHubToken.sol
-│   ├── controllers/             # Request handlers
-│   ├── middleware/              # Express middleware (auth, roles)
-│   ├── models/                  # Mongoose schemas
-│   ├── routes/                  # API route definitions
-│   ├── scripts/                 # Utility scripts
-│   │   ├── deploy.js            # Contract deployment
-│   │   ├── seedTestData.js      # Database seeding
+│   ├── controllers/                   # Request handlers
+│   ├── middleware/                    # Express middleware (auth, roles)
+│   ├── models/                        # Mongoose schemas
+│   ├── routes/                        # API route definitions
+│   ├── scripts/                       # Utility scripts
+│   │   ├── deploy.js                  # Contract deployment
+│   │   ├── seedTestData.js            # Database seeding
 │   │   └── generateAdminToken.js
-│   ├── docs/                    # API documentation
-│   ├── .env.example             # Environment variables template
-│   ├── hardhat.config.js        # Hardhat configuration
+│   ├── docs/                          # API documentation
+│   ├── .env.example                   # Environment variables template
+│   ├── hardhat.config.js              # Hardhat configuration
 │   ├── package.json
-│   └── server.js                # Application entry point
+│   └── server.js                      # Application entry point
 │
-├── frontend/                    # Vue.js frontend
-│   ├── public/                  # Static assets
+├── frontend/                          # Vue.js frontend
+│   ├── public/                        # Static assets
 │   ├── src/
-│   │   ├── assets/              # Styles and images
-│   │   ├── components/          # Vue components
-│   │   ├── composables/         # Composition API utilities
-│   │   ├── router/              # Vue Router configuration
-│   │   ├── services/            # API service layer
-│   │   ├── stores/              # Pinia stores
-│   │   ├── utils/               # Helper functions
-│   │   ├── views/               # Page components
-│   │   ├── App.vue              # Root component
-│   │   └── main.js              # Application entry
-│   ├── tests/                   # Test files
-│   ├── .env.example             # Environment variables template
+│   │   ├── assets/                    # Styles and images
+│   │   ├── components/                # Vue components
+│   │   ├── composables/               # Composition API utilities
+│   │   ├── router/                    # Vue Router configuration
+│   │   ├── services/                  # API service layer
+│   │   ├── stores/                    # Pinia stores
+│   │   ├── utils/                     # Helper functions
+│   │   ├── views/                     # Page components
+│   │   ├── App.vue                    # Root component
+│   │   └── main.js                    # Application entry
+│   ├── tests/                         # Test files
+│   ├── .env.example                   # Environment variables template
 │   ├── package.json
 │   └── vite.config.js
 │
@@ -120,7 +120,7 @@ cd backend
 npm install
 ```
 
-Create a `.env` file based on `.env.example`:
+Create a `.env` file based on [.env.example](backend/.env.example):
 
 ```env
 # MongoDB Configuration
@@ -146,7 +146,7 @@ cd ../frontend
 npm install
 ```
 
-Create a `.env` file based on `.env.example`:
+Create a `.env` file based on [.env.example](frontend/.env.example):
 
 ```env
 VITE_API_BASE_URL=http://localhost:5000/api
@@ -217,7 +217,7 @@ Frontend will run on `http://localhost:3000`
 
 ## API Documentation
 
-Comprehensive API documentation is available in `backend/docs/API_DOCUMENTATION.md`.
+Comprehensive API documentation is available in [API_DOCUMENTATION.md](backend/docs/API_DOCUMENTATION.md).
 
 ### Key Endpoints
 
@@ -375,6 +375,8 @@ For production, deploy to Ethereum mainnet or a production-ready L2 solution. En
 
 ## Contributing
 
+We welcome contributions! Please see our [Contributing Guidelines](CONTRIBUTING.md) for details on how to get started.
+
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
 3. Commit your changes (`git commit -m 'Add amazing feature'`)
@@ -383,7 +385,7 @@ For production, deploy to Ethereum mainnet or a production-ready L2 solution. En
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Acknowledgments
 

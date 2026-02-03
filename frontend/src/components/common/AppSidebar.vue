@@ -23,6 +23,7 @@ import UsersIcon from "@/components/icons/UsersIcon.vue";
 import TrophyIcon from "@/components/icons/TrophyIcon.vue";
 import GiftIcon from "@/components/icons/GiftIcon.vue";
 import WalletIcon from "@/components/icons/WalletIcon.vue";
+import AwardIcon from "@/components/icons/AwardIcon.vue";
 
 const authStore = useAuthStore();
 
@@ -41,7 +42,13 @@ const navLinks = computed(() => {
   if (role === "faculty") {
     return [
       { path: "/faculty/dashboard", label: "Dashboard", icon: DashboardIcon },
-      { path: "/faculty/award", label: "Award Achievements", icon: TrophyIcon },
+      { path: "/faculty/award", label: "Award", icon: AwardIcon },
+      {
+        path: "/faculty/achievements",
+        label: "Achievements",
+        icon: TrophyIcon,
+      },
+      { path: "/faculty/perks", label: "Perks", icon: GiftIcon },
     ];
   }
 

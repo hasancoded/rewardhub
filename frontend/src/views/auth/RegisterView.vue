@@ -2,7 +2,7 @@
   <div class="auth-container">
     <div class="auth-card card">
       <div class="auth-header">
-        <h1>RewardHub</h1>
+        <Logo variant="full" size="lg" />
         <p>Create your account</p>
       </div>
 
@@ -76,6 +76,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "@/stores/auth";
 import { getErrorMessage } from "@/utils/helpers";
+import Logo from "@/components/common/Logo.vue";
 
 const router = useRouter();
 const authStore = useAuthStore();
@@ -159,21 +160,10 @@ async function handleRegister() {
 .auth-header {
   text-align: center;
   margin-bottom: 2rem;
-}
-
-.auth-header h1 {
-  font-size: var(--font-size-3xl);
-  background: linear-gradient(
-    135deg,
-    var(--primary-color) 0%,
-    var(--accent-teal) 100%
-  );
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.5rem;
-  font-weight: var(--font-weight-bold);
-  letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .auth-header p {

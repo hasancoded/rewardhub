@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const Redemption = require("../models/Redemption");
+const blockchain = require("../blockchain/contract");
 const { ethers } = require("ethers");
 const crypto = require("crypto");
 
@@ -80,8 +82,6 @@ exports.verifyWallet = async (req, res) => {
       // If user is a student, register them on the blockchain
       if (req.userDoc.role === "student") {
         try {
-          const blockchain = require("../blockchain/contract");
-
           // Check if student is already registered on blockchain
           const isRegistered = await blockchain.isStudentRegistered(
             address.toLowerCase()
@@ -111,6 +111,14 @@ exports.verifyWallet = async (req, res) => {
         msg: "Wallet connected successfully",
         walletAddress: req.userDoc.walletAddress,
         walletConnected: true,
+        user: {
+          id: req.userDoc._id,
+          email: req.userDoc.email,
+          name: req.userDoc.name,
+          role: req.userDoc.role,
+          walletAddress: req.userDoc.walletAddress,
+          walletConnected: req.userDoc.walletConnected,
+        },
       });
     } catch (verifyErr) {
       console.error("Signature verification error:", verifyErr);
@@ -140,6 +148,14 @@ exports.disconnectWallet = async (req, res) => {
     res.json({
       msg: "Wallet disconnected successfully",
       walletConnected: false,
+      user: {
+        id: req.userDoc._id,
+        email: req.userDoc.email,
+        name: req.userDoc.name,
+        role: req.userDoc.role,
+        walletAddress: null,
+        walletConnected: false,
+      },
     });
   } catch (err) {
     console.error("Error disconnecting wallet:", err);
@@ -161,5 +177,60 @@ exports.getWalletStatus = async (req, res) => {
   } catch (err) {
     console.error("Error getting wallet status:", err);
     res.status(500).json({ msg: "Server error", error: err.message });
+  }
+};
+
+/**
+ * Get calculated token balance (blockchain + database redemptions)
+ * GET /api/users/wallet/calculated-balance
+ * Protected route - requires authentication
+ */
+exports.getCalculatedBalance = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+
+    if (!user.walletConnected || !user.walletAddress) {
+      return res.status(400).json({
+        msg: "Wallet not connected",
+      });
+    }
+
+    // Get blockchain balance
+    const blockchainData = await blockchain.getTokenBalance(user.walletAddress);
+    const blockchainBalance = blockchainData.human;
+
+    // Get all redemptions
+    const redemptions = await Redemption.find({
+      studentId: userId,
+      status: { $ne: "rejected" },
+    }).populate("rewardId");
+
+    // Separate blockchain vs database redemptions
+    const blockchainRedemptions = redemptions
+      .filter((r) => r.rewardId?.onChainCreated)
+      .reduce((sum, r) => sum + (r.rewardId?.tokenCost || 0), 0);
+
+    const databaseRedemptions = redemptions
+      .filter((r) => !r.rewardId?.onChainCreated)
+      .reduce((sum, r) => sum + (r.rewardId?.tokenCost || 0), 0);
+
+    // Calculate available balance
+    const availableBalance = blockchainBalance - databaseRedemptions;
+
+    res.json({
+      blockchainBalance,
+      blockchainRedemptions,
+      databaseRedemptions,
+      availableBalance,
+      breakdown: {
+        totalEarned: blockchainBalance + blockchainRedemptions,
+        blockchainPerksRedeemed: blockchainRedemptions,
+        databasePerksRedeemed: databaseRedemptions,
+      },
+    });
+  } catch (err) {
+    console.error("Error calculating balance:", err);
+    res.status(500).json({ error: err.message });
   }
 };

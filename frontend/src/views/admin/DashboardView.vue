@@ -36,14 +36,14 @@
           <div class="stat-card card">
             <h3>Tokens Distributed</h3>
             <p class="stat-value">
-              {{ stats.totalTokensDistributedToStudents || 0 }}
+              {{ stats.totalTokensDistributed || 0 }}
             </p>
             <div class="stat-breakdown">
-              <span>Redeemed: {{ stats.totalTokensRedeemed || 0 }}</span>
               <span
-                >Total Supply:
-                {{ stats.totalTokensAvailableInBlockchain || 0 }}</span
+                >From Blockchain:
+                {{ stats.totalTokensFromBlockchain || 0 }}</span
               >
+              <span>Redeemed: {{ stats.totalTokensRedeemed || 0 }}</span>
             </div>
           </div>
 

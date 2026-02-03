@@ -15,33 +15,19 @@
         <!-- Faculty Profile Section -->
         <FacultyDetails />
 
-        <!-- Quick Award Widget -->
-        <QuickAward @award-success="handleAwardSuccess" />
-
         <!-- Recent Activity Feed -->
-        <RecentActivity ref="recentActivityRef" />
+        <RecentActivity />
       </main>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref } from "vue";
 import AppHeader from "@/components/common/AppHeader.vue";
 import AppSidebar from "@/components/common/AppSidebar.vue";
 import FacultyDetails from "@/components/faculty/FacultyDetails.vue";
 import FacultyStats from "@/components/faculty/FacultyStats.vue";
-import QuickAward from "@/components/faculty/QuickAward.vue";
 import RecentActivity from "@/components/faculty/RecentActivity.vue";
-
-const recentActivityRef = ref(null);
-
-function handleAwardSuccess() {
-  // Refresh recent activity when award is successful
-  if (recentActivityRef.value) {
-    recentActivityRef.value.fetchActivity();
-  }
-}
 </script>
 
 <style scoped>
