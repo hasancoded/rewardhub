@@ -9,30 +9,51 @@ pnpm-debug.log*
 *.log
 
 # -------------------------
+# Environment Variables
+# -------------------------
+.env
+.env.*
+*.env
+!.env.example
+backend/.env
+backend/.env.*
+frontend/.env
+frontend/.env.*
+
+# -------------------------
 # Backend (Node/Express)
 # -------------------------
 backend/node_modules/
-backend/*.env
-backend/.env
-backend/.env.*
 
-# Local env files
-.env
-.env.*
-*.local
+# Hardhat / Blockchain
+backend/artifacts/
+backend/cache/
+backend/typechain/
+backend/typechain-types/
 
-# Lock files (optional but recommended)
+# -------------------------
+# Frontend (Vue/Vite)
+# -------------------------
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+
+# -------------------------
+# Lock files (optional)
+# -------------------------
 package-lock.json
 pnpm-lock.yaml
 yarn.lock
 
 # -------------------------
-# Security - SSH Keys
+# Security - SSH Keys & Private Keys
 # -------------------------
 ssh_key
 ssh_key.*
 *.pem
 *.key
+!hardhat.config.js
 
 # -------------------------
 # IDE / Editor
@@ -56,3 +77,16 @@ Thumbs.db
 # -------------------------
 *.temp
 *.tmp
+
+# -------------------------
+# Test coverage
+# -------------------------
+coverage/
+.nyc_output/
+
+# -------------------------
+# Build outputs
+# -------------------------
+dist/
+build/
+out/
