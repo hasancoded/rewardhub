@@ -1,5 +1,12 @@
 # RewardHub
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Node.js Version](https://img.shields.io/badge/node-%3E%3D16.0.0-brightgreen)](https://nodejs.org/)
+[![Vue.js](https://img.shields.io/badge/Vue.js-3.x-4FC08D?logo=vue.js&logoColor=white)](https://vuejs.org/)
+[![Ethereum](https://img.shields.io/badge/Ethereum-Smart%20Contracts-3C3C3D?logo=ethereum&logoColor=white)](https://ethereum.org/)
+[![Hardhat](https://img.shields.io/badge/Built%20with-Hardhat-yellow)](https://hardhat.org/)
+[![MongoDB](https://img.shields.io/badge/Database-MongoDB-47A248?logo=mongodb&logoColor=white)](https://www.mongodb.com/)
+
 A blockchain-integrated student reward management system that enables educational institutions to award achievements and manage perks using ERC20 tokens on Ethereum. The system combines traditional database management with blockchain transparency, ensuring token balances are verifiable on-chain while maintaining flexible off-chain data management.
 
 ## Features
@@ -45,43 +52,43 @@ A blockchain-integrated student reward management system that enables educationa
 
 ```
 RewardHub/
-├── backend/                    # Node.js/Express backend
-│   ├── blockchain/            # Blockchain integration layer
-│   │   ├── contract.js       # Smart contract interaction functions
+├── backend/                     # Node.js/Express backend
+│   ├── blockchain/              # Blockchain integration layer
+│   │   ├── contract.js          # Smart contract interaction functions
 │   │   └── RewardHubTokenABI.json
-│   ├── config/               # Configuration files
-│   │   └── db.js            # MongoDB connection
-│   ├── contracts/           # Solidity smart contracts
+│   ├── config/                  # Configuration files
+│   │   └── db.js                # MongoDB connection
+│   ├── contracts/               # Solidity smart contracts
 │   │   └── RewardHubToken.sol
-│   ├── controllers/         # Request handlers
-│   ├── middleware/          # Express middleware (auth, roles)
-│   ├── models/             # Mongoose schemas
-│   ├── routes/             # API route definitions
-│   ├── scripts/            # Utility scripts
-│   │   ├── deploy.js      # Contract deployment
-│   │   ├── seedTestData.js # Database seeding
+│   ├── controllers/             # Request handlers
+│   ├── middleware/              # Express middleware (auth, roles)
+│   ├── models/                  # Mongoose schemas
+│   ├── routes/                  # API route definitions
+│   ├── scripts/                 # Utility scripts
+│   │   ├── deploy.js            # Contract deployment
+│   │   ├── seedTestData.js      # Database seeding
 │   │   └── generateAdminToken.js
-│   ├── docs/              # API documentation
-│   ├── .env.example       # Environment variables template
-│   ├── hardhat.config.js  # Hardhat configuration
+│   ├── docs/                    # API documentation
+│   ├── .env.example             # Environment variables template
+│   ├── hardhat.config.js        # Hardhat configuration
 │   ├── package.json
-│   └── server.js          # Application entry point
+│   └── server.js                # Application entry point
 │
-├── frontend/              # Vue.js frontend
-│   ├── public/           # Static assets
+├── frontend/                    # Vue.js frontend
+│   ├── public/                  # Static assets
 │   ├── src/
-│   │   ├── assets/      # Styles and images
-│   │   ├── components/  # Vue components
-│   │   ├── composables/ # Composition API utilities
-│   │   ├── router/      # Vue Router configuration
-│   │   ├── services/    # API service layer
-│   │   ├── stores/      # Pinia stores
-│   │   ├── utils/       # Helper functions
-│   │   ├── views/       # Page components
-│   │   ├── App.vue      # Root component
-│   │   └── main.js      # Application entry
-│   ├── tests/           # Test files
-│   ├── .env.example     # Environment variables template
+│   │   ├── assets/              # Styles and images
+│   │   ├── components/          # Vue components
+│   │   ├── composables/         # Composition API utilities
+│   │   ├── router/              # Vue Router configuration
+│   │   ├── services/            # API service layer
+│   │   ├── stores/              # Pinia stores
+│   │   ├── utils/               # Helper functions
+│   │   ├── views/               # Page components
+│   │   ├── App.vue              # Root component
+│   │   └── main.js              # Application entry
+│   ├── tests/                   # Test files
+│   ├── .env.example             # Environment variables template
 │   ├── package.json
 │   └── vite.config.js
 │
